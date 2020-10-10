@@ -8,6 +8,112 @@
 
 package com.nabiki.ctp4j;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class ThostFtdcCtpApi implements ThostFtdcCtpApiConstants {
-    static final Object syncObj = new Object();
+  static final Object syncObj = new Object();
+
+  public static File search(String fileName, Path current) {
+    if (fileName == null || current == null) {
+      return null;
+    }
+    File[] r = new File[1];
+    if (Files.isDirectory(current)) {
+      var result = current.toFile().listFiles(new FileFilter() {
+        @Override
+        public boolean accept(File file) {
+          if (file.getName().equals(fileName)) {
+            r[0] = file;
+          } else {
+            return file.isDirectory();
+          }
+          return false;
+        }
+      });
+      if (r[0] != null) {
+        return r[0];
+      } else if (result != null && result.length != 0) {
+          for (var dir : result) {
+            r[0] = search(fileName, dir.toPath());
+            if (r[0] != null) {
+              return r[0];
+            }
+        }
+      }
+      return null;
+    } else {
+      if (fileName.equals(current.getFileName().toString())) {
+        return current.toFile();
+      } else {
+        return null;
+      }
+    }
+  }
+
+  public static Path getCurrentPath() {
+    return Path.of(new File("").getAbsolutePath());
+  }
+
+  public static Path getJarPath(Class<?> clz) {
+    try {
+      var p = clz.getProtectionDomain()
+          .getCodeSource()
+          .getLocation()
+          .getPath();
+      return new File(p).toPath();
+    } catch (Throwable ignored) {
+      return getCurrentPath();
+    }
+  }
+
+  public static String getLibraryExtension() {
+    var os = System.getProperty("os.name");
+    if (os == null) {
+      return "";
+    }
+    os = os.toLowerCase();
+    if (os.contains("win")) {
+      return ".dll";
+    } else {
+      return ".so";
+    }
+  }
+
+  public static boolean library(String soleName) {
+    Path[] searchPath = new Path[]{
+        getCurrentPath(),
+        getJarPath(ThostFtdcCtpApi.class).getParent()
+    };
+    var ext = getLibraryExtension();
+    String[] exts = new String[]{
+        ext,
+        ext.toUpperCase(),
+        ext.toLowerCase()
+    };
+    for (var path : searchPath) {
+      for (var e : exts) {
+        var f = search(soleName + e, path);
+        if (f != null) {
+          System.load(f.getAbsolutePath());
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  static {
+    try {
+      /* library names may change across different versions */
+      assert library("thostmduserapi_se");
+      assert library("thosttraderapi_se");
+      assert library("thost-v6.3.19-P1-ctp4j-1.0.1");
+    } catch (Throwable th) {
+      th.printStackTrace();
+      System.exit(1);
+    }
+  }
 }
