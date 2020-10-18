@@ -3,17 +3,40 @@ package com.nabiki.ctp4j;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class StaticDllLoader {
-  private static final Logger LOGGER = Logger.getGlobal();
+  /* Library names may change across different versions. */
+  private final static String[] DLLS = new String[]{
+      "thostmduserapi_se",
+      "thosttraderapi_se",
+      "thost-v6.3.19-P1-ctp4j-1.0.2"
+  };
+
+  private static final Logger LOGGER = Logger.getLogger(ThostFtdcCtpApi.Version);
   private static final Collection<Path> DLL_SEARCH_PATHS = new HashSet<>();
+
+  static {
+    try {
+      logger();
+      path();
+      for (var name : DLLS) {
+        library(name);
+      }
+    } catch (Throwable th) {
+      th.printStackTrace();
+      LOGGER.severe(th.getMessage());
+    }
+  }
 
   public static Collection<Path> getDllSearchPaths(Path root) {
     var r = new LinkedList<Path>();
@@ -83,6 +106,13 @@ public class StaticDllLoader {
     } else {
       return ".so";
     }
+  }
+
+  private static void logger() throws IOException {
+    var fh = new FileHandler(ThostFtdcCtpApi.Version.concat(".log"));
+    fh.setFormatter(new SimpleFormatter());
+    fh.setEncoding(StandardCharsets.UTF_8.name());
+    LOGGER.addHandler(fh);
   }
 
   public static void path() {
@@ -176,13 +206,5 @@ public class StaticDllLoader {
       }
       return conjunct(s);
     }
-  }
-
-  static {
-    path();
-    /* library names may change across different versions */
-    library("thostmduserapi_se");
-    library("thosttraderapi_se");
-    library("thost-v6.3.19-P1-ctp4j-1.0.2");
   }
 }

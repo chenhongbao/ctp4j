@@ -3,10 +3,10 @@
   <groupId>com.nabiki.ctp4j</groupId>
   <artifactId>nabiki-ctp4j</artifactId>
   <versioning>
-    <release>1.0.2</release>
+    <release>1.0.3</release>
     <versions>
-      <version>1.0.2</version>
+      <version>1.0.3</version>
     </versions>
-    <lastUpdated>20201011033021</lastUpdated>
+    <lastUpdated>20201018003131</lastUpdated>
   </versioning>
 </metadata>

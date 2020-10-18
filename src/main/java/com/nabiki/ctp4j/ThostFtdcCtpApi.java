@@ -11,4 +11,7 @@ package com.nabiki.ctp4j;
 public class ThostFtdcCtpApi implements ThostFtdcCtpApiConstants {
   static final Object syncObj = new Object();
   static final StaticDllLoader dllLoader = new StaticDllLoader();
+
+  // Version.
+  public static final String Version = "ctp4j-1.0.2";
 }

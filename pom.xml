@@ -6,7 +6,7 @@
 
   <groupId>com.nabiki.ctp4j</groupId>
   <artifactId>nabiki-ctp4j</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 
   <name>ctp4j</name>
   <url>https://github.com/chenhongbao/ctp4j</url>
