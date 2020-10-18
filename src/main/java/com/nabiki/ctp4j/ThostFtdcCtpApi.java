@@ -13,5 +13,5 @@ public class ThostFtdcCtpApi implements ThostFtdcCtpApiConstants {
   static final StaticDllLoader dllLoader = new StaticDllLoader();
 
   // Version.
-  public static final String Version = "ctp4j-1.0.2";
+  public static final String Version = "ctp4j-1.0.3";
 }

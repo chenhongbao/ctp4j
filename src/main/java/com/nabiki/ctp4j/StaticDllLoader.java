@@ -19,7 +19,7 @@ public class StaticDllLoader {
   private final static String[] DLLS = new String[]{
       "thostmduserapi_se",
       "thosttraderapi_se",
-      "thost-v6.3.19-P1-ctp4j-1.0.2"
+      "thost-v6.3.19-P1-ctp4j-1.0.3"
   };
 
   private static final Logger LOGGER = Logger.getLogger(ThostFtdcCtpApi.Version);
