@@ -11,6 +11,7 @@ package org.ctp4j;
 public class CThostFtdcMdApi {
   private transient long swigCPtr;
   protected transient boolean swigCMemOwn;
+  protected CThostFtdcMdSpi jSpi;
 
   protected CThostFtdcMdApi(long cPtr, boolean cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
@@ -57,6 +58,7 @@ public class CThostFtdcMdApi {
 
   public void Release() {
     ThostFtdcCtpApiJNI.CThostFtdcMdApi_Release(swigCPtr, this);
+    jSpi = null;
   }
 
   public void Init() {
@@ -85,6 +87,7 @@ public class CThostFtdcMdApi {
 
   public void RegisterSpi(CThostFtdcMdSpi pSpi) {
     ThostFtdcCtpApiJNI.CThostFtdcMdApi_RegisterSpi(swigCPtr, this, CThostFtdcMdSpi.getCPtr(pSpi), pSpi);
+    jSpi = pSpi;
   }
 
   public int SubscribeMarketData(String[] ppInstrumentID, int nCount) {

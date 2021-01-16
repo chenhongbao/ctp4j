@@ -11,6 +11,7 @@ package org.ctp4j;
 public class CThostFtdcTraderApi {
   private transient long swigCPtr;
   protected transient boolean swigCMemOwn;
+  protected CThostFtdcTraderSpi jSpi;
 
   protected CThostFtdcTraderApi(long cPtr, boolean cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
@@ -47,6 +48,7 @@ public class CThostFtdcTraderApi {
 
   public void Release() {
     ThostFtdcCtpApiJNI.CThostFtdcTraderApi_Release(swigCPtr, this);
+    jSpi = null;
   }
 
   public void Init() {
@@ -75,6 +77,7 @@ public class CThostFtdcTraderApi {
 
   public void RegisterSpi(CThostFtdcTraderSpi pSpi) {
     ThostFtdcCtpApiJNI.CThostFtdcTraderApi_RegisterSpi(swigCPtr, this, CThostFtdcTraderSpi.getCPtr(pSpi), pSpi);
+    jSpi = pSpi;
   }
 
   public void SubscribePrivateTopic(THOST_TE_RESUME_TYPE nResumeType) {
