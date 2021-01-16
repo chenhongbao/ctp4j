@@ -9,7 +9,6 @@
 package org.ctp4j;
 
 public class ThostFtdcCtpApi implements ThostFtdcCtpApiConstants {
-  static final Object syncObj = new Object();
   static final StaticDllLoader dllLoader = new StaticDllLoader();
 
   // Version.
