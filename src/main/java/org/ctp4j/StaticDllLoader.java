@@ -22,20 +22,15 @@ public class StaticDllLoader {
       "thost-v6.3.19-P1-ctp4j-1.0.4"
   };
 
-  private static final Logger LOGGER = Logger.getLogger(ThostFtdcCtpApi.Version);
+  private static final Logger LOGGER = Logger.getLogger(ThostFtdcCtpApi.getVersion());
   private static final Collection<Path> DLL_SEARCH_PATHS = new HashSet<>();
 
-  static {
-    try {
+  public static void install() throws IOException {
       logger();
       path();
       for (var name : DLLS) {
         library(name);
       }
-    } catch (Throwable th) {
-      th.printStackTrace();
-      LOGGER.severe(th.getMessage());
-    }
   }
 
   public static Collection<Path> getDllSearchPaths(Path root) {
@@ -109,7 +104,7 @@ public class StaticDllLoader {
   }
 
   private static void logger() throws IOException {
-    var fh = new FileHandler(ThostFtdcCtpApi.Version.concat(".log"));
+    var fh = new FileHandler(ThostFtdcCtpApi.getVersion().concat(".log"));
     fh.setFormatter(new SimpleFormatter());
     fh.setEncoding(StandardCharsets.UTF_8.name());
     LOGGER.addHandler(fh);
@@ -120,7 +115,7 @@ public class StaticDllLoader {
     DLL_SEARCH_PATHS.add(getJarPath(StaticDllLoader.class).getParent());
   }
 
-  public static void library(String soleName) {
+  public static void library(String soleName) throws IOException {
     boolean loaded = false;
     var ext = getLibraryExtension();
     String[] dlls = new String[]{
@@ -145,7 +140,7 @@ public class StaticDllLoader {
     }
   }
 
-  private static void tryExportLoad(String[] dlls) {
+  private static void tryExportLoad(String[] dlls) throws IOException {
     boolean loaded = false;
     for (var dll : dlls) {
       var f = export(dll);
@@ -162,7 +157,7 @@ public class StaticDllLoader {
     }
   }
 
-  private static File export(String dll) {
+  private static File export(String dll) throws IOException {
     var ins = StaticDllLoader.class.getResourceAsStream("/DLL/" + dll);
     if (ins == null) {
       return null;
@@ -174,7 +169,7 @@ public class StaticDllLoader {
     } catch (IOException e) {
       LOGGER.severe(String.format(
           "Can't create DLL: %s, %s", file.getAbsolutePath(), e.getMessage()));
-      return null;
+      throw e;
     }
     file.deleteOnExit();
     return file;
