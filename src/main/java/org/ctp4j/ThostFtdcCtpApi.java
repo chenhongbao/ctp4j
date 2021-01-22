@@ -8,9 +8,14 @@
 
 package org.ctp4j;
 
-public class ThostFtdcCtpApi implements ThostFtdcCtpApiConstants {
-  static final StaticDllLoader dllLoader = new StaticDllLoader();
+import java.io.IOException;
 
-  // Version.
-  public static final String Version = "ctp4j-1.0.4";
+public class ThostFtdcCtpApi implements ThostFtdcCtpApiConstants {
+  public static void install() throws IOException {
+    StaticDllLoader.install();
+  }
+
+  public static String getVersion() {
+    return "ctp4j-1.0.4";
+  }
 }
